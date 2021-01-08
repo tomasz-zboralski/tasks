@@ -19,16 +19,16 @@ public class TaskController {
         return new TaskDto(1L, "test title", "test_content");
     }
 
-    @DeleteMapping
+    @DeleteMapping(value = "deleteTask")
     public void deleteTask(Long taskId) {
     }
 
-    @PutMapping
+    @PutMapping(value = "updateTask")
     public TaskDto updateTask(TaskDto taskDto) {
         return new TaskDto(1L, "Edited test title", "Test content");
     }
 
-    @PostMapping
+    @PostMapping(value = "createTask")
     public void createTask(TaskDto taskDto) {
     }
 }
