@@ -1,6 +1,7 @@
 package com.crud.tasks.trello.client;
 
 import com.crud.tasks.domain.TrelloBoardDto;
+import com.crud.tasks.domain.TrelloListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -54,8 +55,12 @@ public class TrelloClient {
 
     }
 
-
-
-
+    public List<TrelloListDto> getTrelloLists() {
+        String listsUrl = trelloApiEndpoint + "/boards/5ff5b65cbaebaf1bb0b94f8e/lists?key=" + trelloAppKey + "&token=" + trelloToken;
+        TrelloListDto[] listsResponse = restTemplate.getForObject(listsUrl, TrelloListDto[].class);
+        return Optional.ofNullable(listsResponse)
+                .map(Arrays::asList)
+                .orElse(Collections.emptyList());
+    }
 
 }
