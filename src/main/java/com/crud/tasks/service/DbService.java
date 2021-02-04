@@ -13,7 +13,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DbService {
 
-    @Autowired
     private TaskRepository repository;
 
     public List<Task> getAllTasks() {
