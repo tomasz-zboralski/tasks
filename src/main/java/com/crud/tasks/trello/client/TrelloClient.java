@@ -4,6 +4,7 @@ import com.crud.tasks.domain.CreatedTrelloCard;
 import com.crud.tasks.domain.TrelloBoardDto;
 import com.crud.tasks.domain.TrelloCardDto;
 import com.crud.tasks.domain.TrelloListDto;
+import com.crud.tasks.trello.config.TrelloConfig;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,37 +26,39 @@ public class TrelloClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrelloClient.class);
 
     private final RestTemplate restTemplate;
+    private final TrelloConfig trelloConfig;
 
-    @Value("${trello.api.endpoint.prod}")
-    private String trelloApiEndpoint;
-    @Value("${trello.app.key}")
-    private String trelloAppKey;
-    @Value("${trello.app.token}")
-    private String trelloToken;
-    @Value("${trello.app.username}")
-    private String trelloUsername;
+//    @Value("${trello.api.endpoint.prod}")
+//    private String trelloApiEndpoint;
+//    @Value("${trello.app.key}")
+//    private String trelloAppKey;
+//    @Value("${trello.app.token}")
+//    private String trelloToken;
+//    @Value("${trello.app.username}")
+//    private String trelloUsername;
 
     private URI boardsUrl() {
-        return UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/" + trelloUsername + "/boards")
+        return UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/members/" + trelloConfig.getTrelloUsername() + "/boards")
                 .queryParam("fields", "name,id")
-                .queryParam("key", trelloAppKey)
-                .queryParam("token", trelloToken)
+                .queryParam("lists", "all")
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
                 .build().encode().toUri();
     }
 
-    private URI listsUrl() {
-        //return trelloApiEndpoint + "/boards/5ff5b65cbaebaf1bb0b94f8e/lists?key=" + trelloAppKey + "&token=" + trelloToken;
-        return UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/boards/5ff5b65cbaebaf1bb0b94f8e/lists")
-                .queryParam("key", trelloAppKey)
-                .queryParam("token", trelloToken)
-                .build().encode().toUri();
-
-    }
+//    private URI listsUrl() {
+//        //return trelloApiEndpoint + "/boards/5ff5b65cbaebaf1bb0b94f8e/lists?key=" + trelloAppKey + "&token=" + trelloToken;
+//        return UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/boards/5ff5b65cbaebaf1bb0b94f8e/lists")
+//                .queryParam("key", trelloConfig.getTrelloAppKey())
+//                .queryParam("token", trelloConfig.getTrelloToken())
+//                .build().encode().toUri();
+//
+//    }
 
     private URI cardUrl(String name, String desc, String pos, String idList) {
-        return UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/cards")
-                .queryParam("key", trelloAppKey)
-                .queryParam("token", trelloToken)
+        return UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards")
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
                 .queryParam("name", name)
                 .queryParam("desc", desc)
                 .queryParam("pos", pos)
@@ -75,8 +78,7 @@ public class TrelloClient {
                     .map(Arrays::asList)
                     .orElse(Collections.emptyList())
                     .stream()
-                    .filter(p -> Objects.nonNull(p.getId()) && Objects.nonNull(p.getName()))
-                    .filter(p -> p.getName().contains("Kodilla"))
+                    .filter(p -> Objects.nonNull(p.getId()) && Objects.nonNull(p.getName())) //.filter(p -> p.getName().contains("Kodilla"))
                     .collect(Collectors.toList());
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
@@ -85,12 +87,12 @@ public class TrelloClient {
 
     }
 
-    public List<TrelloListDto> getTrelloLists() {
-        TrelloListDto[] listsResponse = restTemplate.getForObject(listsUrl(), TrelloListDto[].class);
-        return Optional.ofNullable(listsResponse)
-                .map(Arrays::asList)
-                .orElse(Collections.emptyList());
-    }
+//    public List<TrelloListDto> getTrelloLists() {
+//        TrelloListDto[] listsResponse = restTemplate.getForObject(listsUrl(), TrelloListDto[].class);
+//        return Optional.ofNullable(listsResponse)
+//                .map(Arrays::asList)
+//                .orElse(Collections.emptyList());
+//    }
 
     public CreatedTrelloCard createNewCard(TrelloCardDto trelloCardDto) {
 

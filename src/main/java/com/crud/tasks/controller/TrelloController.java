@@ -18,24 +18,29 @@ public class TrelloController {
     private final TrelloClient trelloClient;
 
     @GetMapping("getTrelloBoards")
-    public void getTrelloBoards() {
+    public List<TrelloBoardDto> getTrelloBoards() {
 
-        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoards();
-        List<TrelloListDto> trelloListDtoList = trelloClient.getTrelloLists();
+        return trelloClient.getTrelloBoards();
+//        List<TrelloListDto> trelloListDtoList = trelloClient.getTrelloLists();
+//
+//        trelloBoards.stream()
+//                .forEach(tb -> tb.setLists(trelloListDtoList));
+//
+//        return trelloBoards;
 
 
-        trelloBoards.stream()
-                .filter(trelloBoardDto -> trelloBoardDto.getId() != null)
-                .filter(trelloBoardDto -> trelloBoardDto.getName() != null)
-                .filter(trelloBoardDto -> trelloBoardDto.getName().contains("Kodilla") )
-                .forEach(trelloBoardDto -> {
-                        System.out.println(trelloBoardDto.getId() + " - " + trelloBoardDto.getName());
-                        System.out.println("This board contains lists: ");
-                        trelloBoardDto.setLists(trelloListDtoList);
-                        trelloBoardDto.getLists().forEach(trelloList -> {
-                            System.out.println(trelloList.getName() + " - " + trelloList.getId() + " - " + trelloList.isClosed());
-                        });
-        });
+//        trelloBoards.stream()
+//                .filter(trelloBoardDto -> trelloBoardDto.getId() != null)
+//                .filter(trelloBoardDto -> trelloBoardDto.getName() != null)
+//                .filter(trelloBoardDto -> trelloBoardDto.getName().contains("Kodilla") )
+//                .forEach(trelloBoardDto -> {
+//                        System.out.println(trelloBoardDto.getId() + " - " + trelloBoardDto.getName());
+//                        System.out.println("This board contains lists: ");
+//                        trelloBoardDto.setLists(trelloListDtoList);
+//                        trelloBoardDto.getLists().forEach(trelloList -> {
+//                            System.out.println(trelloList.getName() + " - " + trelloList.getId() + " - " + trelloList.isClosed());
+//                        });
+//        });
     }
 
     @PostMapping("createTrelloCard")
