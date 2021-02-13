@@ -16,7 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskController {
 
+    @Autowired
     private final DbService service;
+    @Autowired
     private final TaskMapper taskMapper;
 
 
