@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/v1/trello")
 @RequiredArgsConstructor
@@ -21,26 +22,6 @@ public class TrelloController {
     public List<TrelloBoardDto> getTrelloBoards() {
 
         return trelloClient.getTrelloBoards();
-//        List<TrelloListDto> trelloListDtoList = trelloClient.getTrelloLists();
-//
-//        trelloBoards.stream()
-//                .forEach(tb -> tb.setLists(trelloListDtoList));
-//
-//        return trelloBoards;
-
-
-//        trelloBoards.stream()
-//                .filter(trelloBoardDto -> trelloBoardDto.getId() != null)
-//                .filter(trelloBoardDto -> trelloBoardDto.getName() != null)
-//                .filter(trelloBoardDto -> trelloBoardDto.getName().contains("Kodilla") )
-//                .forEach(trelloBoardDto -> {
-//                        System.out.println(trelloBoardDto.getId() + " - " + trelloBoardDto.getName());
-//                        System.out.println("This board contains lists: ");
-//                        trelloBoardDto.setLists(trelloListDtoList);
-//                        trelloBoardDto.getLists().forEach(trelloList -> {
-//                            System.out.println(trelloList.getName() + " - " + trelloList.getId() + " - " + trelloList.isClosed());
-//                        });
-//        });
     }
 
     @PostMapping("createTrelloCard")
