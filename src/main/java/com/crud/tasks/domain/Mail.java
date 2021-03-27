@@ -1,9 +1,13 @@
 package com.crud.tasks.domain;
 
+//import com.sun.istack.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+//import javax.validation.constraints.Null;
+import java.util.Optional;
 
 @Builder
 @AllArgsConstructor
@@ -13,6 +17,6 @@ public class Mail {
     private final String mailTo;
     private final String subject;
     private final String message;
-    private final String toCc;
+    private final Optional<String> toCc;
 
 }
