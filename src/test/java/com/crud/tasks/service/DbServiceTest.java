@@ -47,7 +47,7 @@ class DbServiceTest {
         List<Task> tasks = dbService.getAllTasks();
 
         //Then
-        assertEquals(5,tasks.size());
+        assertEquals(1, tasks.size());
     }
 
     @Test
