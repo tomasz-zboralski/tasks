@@ -128,6 +128,7 @@ public class TrelloMapperTestSuite {
 
     }
 
+    @Test
     void testMapToCard() {
 
         //Given
