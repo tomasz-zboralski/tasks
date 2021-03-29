@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 class DbServiceTest {
 
     @Autowired
@@ -35,19 +35,27 @@ class DbServiceTest {
 
         //Then
         assertTrue(savedTask.isPresent());
+
+        //CleanUp
+        dbService.deleteTask(taskId);
     }
 
     @Test
     void testGetAllTasks() {
         //Given
         Task task1 = new Task("test1", "test1");
-        dbService.saveTask(task1);
+        Task savedTask = dbService.saveTask(task1);
 
         //When
         List<Task> tasks = dbService.getAllTasks();
 
         //Then
         assertEquals(1, tasks.size());
+
+        //CleanUp
+        Long taskId = savedTask.getId();
+        dbService.deleteTask(taskId);
+
     }
 
     @Test
@@ -77,5 +85,8 @@ class DbServiceTest {
 
         //Then
         assertTrue(savedTask.isPresent());
+
+        //CleanUp
+        dbService.deleteTask(taskId);
     }
 }
