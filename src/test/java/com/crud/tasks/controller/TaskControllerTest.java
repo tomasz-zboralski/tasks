@@ -8,6 +8,7 @@ import com.crud.tasks.service.DbService;
 import com.google.gson.Gson;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ class TaskControllerTest {
         //When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/v1/task/getTask?taskId=1")
+                        .get("/v1/tasks/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title", Matchers.is("Dto name")))
@@ -70,7 +70,7 @@ class TaskControllerTest {
         //When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/v1/task/getTasks")
+                        .get("/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(0)));
@@ -93,14 +93,11 @@ class TaskControllerTest {
         //When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/v1/task/createTask")
+                        .post("/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(jsonContent))
-                .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title", Matchers.is("test title")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content", Matchers.is("test content")));
+                .andExpect(MockMvcResultMatchers.status().is(200));
 
     }
 
@@ -116,10 +113,11 @@ class TaskControllerTest {
         //When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .delete("/v1/task/deleteTask?taskId=1")
+                        .delete("/v1/tasks/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
+
 
     @Test
     void shouldUpdateTask() throws Exception {
@@ -128,7 +126,11 @@ class TaskControllerTest {
         Task task = new Task(1L, "test  title", "test content");
         TaskDto taskDto = new TaskDto(1L, "test title", "test content");
 
+        //when(taskMapper.mapToTask(taskDto)).thenReturn(task);
+        when(taskMapper.mapToTask(any(TaskDto.class))).thenReturn(task);
         when(dbService.saveTask(any(Task.class))).thenReturn(task);
+        when(taskMapper.mapToTaskDto(task)).thenReturn(taskDto);
+
 
         Gson gson = new Gson();
         String jsonContent = gson.toJson(taskDto);
@@ -136,7 +138,7 @@ class TaskControllerTest {
         //When & Then
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .put("/v1/task/updateTask")
+                        .put("/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(jsonContent))

@@ -62,17 +62,27 @@ public class SimpleEmailService {
         };
     }
 
-    //    private SimpleMailMessage createMailMessage(final Mail mail) {
-//        SimpleMailMessage mailMessage = new SimpleMailMessage();
-//        mailMessage.setTo(mail.getMailTo());
-//        mailMessage.setSubject(mail.getSubject());
-//        mailMessage.setText(mail.getMessage());
-//        if (mail.getToCc().isPresent()) {
-//            mailMessage.setCc(mail.getToCc().get());
-//        }
-//
-//        return mailMessage;
-//    }
+    public void sendBasic(final Mail mail) {
+        log.info("Starting email preparation...");
+        try {
+            //SimpleMailMessage mailMessage = createMailMessage(mail);
+            javaMailSender.send(createMailMessage(mail));
+            log.info("Email has been sent.");
+        } catch (MailException e) {
+            log.error("Failed to process email sending: " + e.getMessage(), e);
+        }
+    }
+        private SimpleMailMessage createMailMessage(final Mail mail) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(mail.getMailTo());
+        mailMessage.setSubject(mail.getSubject());
+        mailMessage.setText(mail.getMessage());
+        if (mail.getToCc().isPresent()) {
+            mailMessage.setCc(mail.getToCc().get());
+        }
+
+        return mailMessage;
+    }
 
 //    private SimpleMailMessage createMailMessage(final Mail mail) {
 //        SimpleMailMessage mailMessage = new SimpleMailMessage();
